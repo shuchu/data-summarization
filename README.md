@@ -20,6 +20,7 @@ $> bazel-bin/summerizer ./data-dump --eval_key "Squirrel" --eval_type "event_typ
 
 ### Example of the input data:  
 A data folder contains data files. Only file has name pattern "ev_dump_*.csv" will be consumed.  
+Assume the .csv data file has header.    
 Example line of the file:  
 "1595275375.814,0c428083,squirrel,e3d387ad18f528237bb7"
 
