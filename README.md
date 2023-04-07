@@ -20,17 +20,18 @@ $> bazel-bin/summerizer ./data-dump --eval_key "Squirrel" --eval_type "event_typ
 
 ### Example of the input data:  
 A data folder contains data files. Only file has name pattern "ev_dump_*.csv" will be consumed.  
-Example line of the file:
+Assume the .csv data file has header.    
+Example line of the file:  
 "1595275375.814,0c428083,squirrel,e3d387ad18f528237bb7"
 
 ### Examples of output:  
-A JSON object records the distribution value. Example output:
+A JSON object records the distribution value. Example output:  
 {
     "D5408274": {"cnt": 4, "mean": 310.75, "max": 828, "min": 109}, 
     "9621EBC2": {"cnt": 4, "mean": 1458.25, "max": 5535, "min": 26},
     ...
-}
-
+}  
+  
 {"SQUIRREL": {"cnt": 10, "hist10": {"820": 1, "5530": 1, "1400": 1, "4920": 1, "720": 1, "150": 1, "410": 1, "580": 1, "130": 1, "140": 1}}}  
 
 ## Dev guide   
