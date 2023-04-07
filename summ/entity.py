@@ -18,7 +18,7 @@ class Entity:
 
     @classmethod
     def is_event_type(cls, event_type: str) -> bool:
-        if len(event_type) > 0 && len(event_type) <= 256:
+        if len(event_type) > 0 and len(event_type) <= 256:
             return True
         else:
             return False

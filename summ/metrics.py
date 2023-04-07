@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
+import logging 
 from typing import List
-from logging import Logger
 from collections import defaultdict
 
 from summ.kv_stores.kv_store import KVStore
 from summ.entity import Entity
 
+_logger = logging.getLogger(__name__)
 
 class Metric:
-    def __init__(self, logger: Logger, kvstore: KVStore):
-        self._logger = logger
+    def __init__(self, kvstore: KVStore):
         self._kvstore = kvstore
         self._supported_metrics = {
                 'device_id': {'min', 'max', 'mean',},
@@ -35,15 +35,16 @@ class Metric:
         res = {}
 
         if eval_type not in self._supported_metrics:
-            self._logger.warning('The eval_type is missing. available options: {}.' % self._supported_metrics.keys())
+            all_metrics = list(self._supported_metrics.keys())
+            _logger.warning(f'The eval_type is missing. available options: {all_metrics}.')
             return res
 
-        if eval_type == 'device_id' and eval_key != '*' and  !Entity.is_device_id(eval_key):
-            self._logger.warning('The input eval_key is a malformed device_id.')
+        if eval_type == 'device_id' and eval_key != '*' and not Entity.is_device_id(eval_key):
+            _logger.warning('The input eval_key is a malformed device_id.')
             return res
         
-        if eval_type == 'event_type' and eval_key != '*' and !Entity.is_event_type(eval_key):
-            self._logger.warning('The input eval_key is a malformed event_type.')
+        if eval_type == 'event_type' and eval_key != '*' and not Entity.is_event_type(eval_key):
+            _logger.warning('The input eval_key is a malformed event_type.')
             return res
 
         # Check the name of given metrics
@@ -65,7 +66,7 @@ class Metric:
                 continue
             
             # Not a match.
-            if (eval_type == 'device_id' and eval_key != '*' and eval_key != dev_id) or 
+            if (eval_type == 'device_id' and eval_key != '*' and eval_key != dev_id) or  \
                (eval_type == 'event_type' and eval_key != '*' and eval_key != ev_type):
                 continue
             

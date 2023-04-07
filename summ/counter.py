@@ -1,28 +1,25 @@
 # -*- coding: utf-8 -*-
 
-from typing import List
-from logging import Logger
+from typing import List, Tuple
+import logging 
 from collections import defaultdict
-import re
 
 from summ.kv_stores.kv_store import KVStore
 from summ.entity import Entity
 
 
-class Counter():
-    def __init__(self, logger: Logger, kv_store: KVStore):
-        self._logger = logger
+_logger = logging.getLogger(__name__)
+
+
+class Counter:
+    def __init__(self, kv_store: KVStore):
         self._store = kv_store
 
         # Record the counts of (device_id, event_type) pairs for a single file.
         self._count_buf = defaultdict(int)  
 
-    def update_by_file(self, fpath: str, fname_pattern: str = 'ev_dump_*.csv', header: bool = True) -> bool:
-        # TODO: the fpath is a full path, we only care the last part!!!
-        if not re.search(fname_pattern, fpath):
-            return False
-        
-        self._logger.info('Processing file: {}' % fpath)
+    def update_by_file(self, fpath: str, header: bool = True) -> None:
+        _logger.info('Processing file: {}' % fpath)
 
         with open(fpath, 'r') as f:
             if header:
@@ -35,7 +32,7 @@ class Counter():
         # updated the buffered result to global kvstor
         self.update_to_global_store()
 
-        self._logger.info('Processed file: {}' % fpath)
+        _logger.info('Processed file: {}' % fpath)
 
     def extract_record(self, record: str) -> Tuple[str, str]:
         """ Extract the content of one line in the .csv data file. The extraced values will be
@@ -66,7 +63,7 @@ class Counter():
         r = record.strip().split(',')
 
         # Check the size of content
-        if len(r) != 4
+        if len(r) != 4:
             return res
 
         # Check the device_id as a hex string
@@ -86,7 +83,7 @@ class Counter():
         """ Update one file's statisitcs to the global storage. """
 
         if not self._store:
-            self._logger.error("The instance of global storage is empty.")
+            _logger.error("The instance of global storage is empty.")
             return
 
         for key in self._count_buf:
@@ -97,7 +94,7 @@ class Counter():
                 self._store.set(key, str(self._count_buf[key]))
             except Exception as e:
                 # Unexcepted exception, stop and check
-                self._logger.error("Unexcepted errors while reading from global store: {}" % e)
+                _logger.error("Unexcepted errors while reading from global store: {}" % e)
                 return
             else:
                 tmp = self._count_buf[key] + int(global_val)
