@@ -16,7 +16,6 @@ from summ.metrics import Metric
 logging.basicConfig(
     format="%(asctime)s %(name)s %(levelname)s: %(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p",
-    encoding="utf-8",
     level=logging.DEBUG,
 )
 _logger = logging.getLogger(__name__)

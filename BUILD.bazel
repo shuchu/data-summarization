@@ -1,0 +1,10 @@
+py_library(
+    name = "summ",
+    srcs = glob(["summ/**/*.py"]),
+)
+
+py_binary(
+    name = "summerizer",
+    srcs = ["summerizer.py"],
+    deps = [":summ"]
+)
