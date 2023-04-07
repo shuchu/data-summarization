@@ -47,8 +47,8 @@ To develop more metrics:
 2. if a complex metric need to be calculated, we can write new functions to process the data in the key-value storage.
 
 To improve scalability:
-1. if the number of unique (device_id, event_type) is high, the default Python dict will not work. We can either use an external Key-value DB or do an key partition by improving the implementation of KVStore class in 'summ/kv_store.py'.
-2. if there are many files in the data folder, we can use cache the file names to task Queue like celery, and create multiple workers with the "update_by_file()" function in "summ/counter.py"
+1. if the number of unique (device_id, event_type) is high, the default Python dict will not work. We can either use an external Key-value DB or do key partition by improving the implementation of KVStore class in 'summ/kv_store.py'.
+2. if there are many files in the data folder, we can cache the file names to task Queue like celery, and create multiple workers with the "update_by_file()" function in "summ/counter.py"
 
 
 
