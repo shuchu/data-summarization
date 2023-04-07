@@ -24,8 +24,7 @@ _logger = logging.getLogger(__name__)
 
 def summerizer(
     data_folder: str,
-    out_dir: str = "./result",
-    out_fmt: str = "csv",
+    out_dir: str = "./",
     eval_key: str = "*",
     eval_type: str = "",
     metrics: str = "*",
@@ -36,16 +35,13 @@ def summerizer(
     Args:
         data_folder: the folder includes all data file.
         out_dir: the output directory.
-        out_fmt: the output file format.
         device_id: the id of device.
         event_type: the type of event.
         metrics: the metrics represented in string format, for example 'min,max'.
     """
     _logger.info(
-        f"analyzing folder: {data_folder} with output directory: {out_dir}, format: {out_fmt}, key: {eval_key}, type: {eval_type} and metrics: {metrics}."
+        f"analyzing folder: {data_folder} with output directory: {out_dir}, key: {eval_key}, type: {eval_type} and metrics: {metrics}."
     )
-
-    _supported_output_fmt = {"csv", "json"}
 
     if metrics == "*" or not metrics:
         list_of_metrics = ["*"]
@@ -70,38 +66,18 @@ def summerizer(
         _logger.warning("The final calculated distribution is empty.")
     else:
         # Output to the target folder
-        target_dir = "./"
-        target_fmt = ".csv"
-        if out_dir:
-            target_dir = out_dir
-
-        out_fmt = out_fmt.lower()
-        if out_fmt in _supported_output_fmt:
-            target_fmt = out_fmt
-
-        if out_fmt == "csv":
-            targt_fname = "dist_{}.csv" % eval_key
-            try:
-                target_path = os.path.join(target_dir, target_fname)
-                with open(target_path, "w") as f:
-                    mywriter = csv.writer(f)
-                    mywriter.writerow([res[eval_key][m] for m in list_of_metrics])
-            except Exception as e:
-                _logger.error(
-                    "Failed to write the result to diretory: {}, error: {}"
-                    % (target_path, e)
-                )
-        elif out_fmt == "json":
-            target_fname = "dist_{}.json" % eval_key
-            try:
-                target_path = os.path.join(target_dir, target_fname)
-                with open(target_path, "w") as f:
-                    json.dump(res, f, ensure_ascii=False)
-            except Exception as e:
-                _logger.error(
-                    "Failed to write the result to diretory: {}, error: {}"
-                    % (target_path, e)
-                )
+        target_fname = f"dist_{eval_key}_{eval_type}.json"
+        # Handle all device_id or event_type
+        if eval_key == '*':
+            target_fname = f"dist_all_{eval_type}.json"
+        try:
+            target_path = os.path.join(out_dir, target_fname)
+            with open(target_path, "w") as f:
+                json.dump(res, f, ensure_ascii=False)
+        except Exception as e:
+            _logger.error(
+                "Failed to write the result to diretory: {target_path}, error: {e}."
+            )
 
 
 if __name__ == "__main__":
@@ -110,11 +86,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_dir", help="the output directory to store analysis results."
     )
-    parser.add_argument(
-        "--output_fmt", help="the format of analysis results. Default CSV."
-    )
     parser.add_argument("--eval_key", help="the key about to be analyzed.")
-    parser.add_argument("--eval_type", help="the type of the related key.")
+    parser.add_argument("--eval_type", required=True, help="the type of the related key.")
     parser.add_argument(
         "--metrics",
         help="the list of metrics to be calculated. Represented by a joined string separated by commas.",
@@ -126,20 +99,12 @@ if __name__ == "__main__":
     if args.output_dir:
         out_dir = args.output_dir
 
-    out_fmt = "csv"
-    if args.output_fmt:
-        out_fmt = args.output_fmt
-
     eval_key = "*"
     if args.eval_key:
         eval_key = args.eval_key
-
-    eval_type = ""
-    if args.eval_type:
-        eval_type = args.eval_type
 
     metrics = "*"
     if args.metrics:
         metrics = args.metrics
 
-    summerizer(args.folder, out_dir, out_fmt, eval_key, eval_type, metrics)
+    summerizer(args.folder, out_dir, eval_key, args.eval_type, metrics)

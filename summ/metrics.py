@@ -79,18 +79,17 @@ class Metric:
             if not dev_id or not ev_type:
                 continue
 
-            # Not a match.
-            if (
-                eval_type == "device_id" and eval_key != "*" and eval_key != dev_id
-            ) or (
-                eval_type == "event_type" and eval_key != "*" and eval_key != ev_type
-            ):
-                continue
-
-            self._update_stats_once(
-                eval_key, int(self._kvstore.get(k)), filtered_metrics, res
-            )
-
+            if eval_type == "device_id":
+                if eval_key != "*" and eval_key != dev_id:
+                    continue
+                else:
+                    self._update_stats_once(dev_id, int(self._kvstore.get(k)), filtered_metrics, res)
+            elif eval_type == "event_type":
+                if eval_key != "*" and eval_key != ev_type:
+                    continue
+                else:
+                    self._update_stats_once(ev_type, int(self._kvstore.get(k)), filtered_metrics, res)
+            
         return res
 
     def _update_stats_once(
@@ -139,4 +138,4 @@ class Metric:
                     idx = val // 10  # histogram with bin size 10
                     stat["hist10"][idx] += 1
 
-        metric[key] = stat
+        metric_buf[key] = stat

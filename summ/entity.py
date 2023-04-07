@@ -24,7 +24,7 @@ class Entity:
 
     @classmethod
     def join_keys(cls, device_id: str, event_type: str) -> str:
-        return "{}|{}" % (device_id, event_type)
+        return f"{device_id}|{event_type}"
 
     @classmethod
     def disjoin_key(cls, key: str) -> List[str]:

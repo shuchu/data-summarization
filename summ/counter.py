@@ -66,11 +66,11 @@ class Counter:
             return res
 
         # Check the device_id as a hex string
-        if not Entity.is_device_id(res[1]):
+        if not Entity.is_device_id(r[1]):
             return res
 
         # Check the length of event_type
-        if not Entity.is_event_type(res[2]):
+        if not Entity.is_event_type(r[2]):
             return res
 
         # Transfer to uppercase
@@ -96,7 +96,7 @@ class Counter:
             except Exception as e:
                 # Unexcepted exception, stop and check
                 _logger.error(
-                    "Unexcepted errors while reading from global store: {}" % e
+                    f"Unexcepted errors while reading from global store: {e}."
                 )
                 return
             else:
