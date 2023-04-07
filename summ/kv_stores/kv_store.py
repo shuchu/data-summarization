@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
-from typing import List, Any
 from abc import ABC, abstractmethod
+from typing import Any, List
 
 
 class KVStore(ABC):
-    """ The interface for key-value storage system."""
+    """The interface for key-value storage system."""
 
     @abstractmethod
     def get(self, key: str) -> str:
-        """ Get the value of a specific value.
+        """Get the value of a specific value.
 
         Args:
             key: a query key in string format.
@@ -24,12 +24,11 @@ class KVStore(ABC):
         pass
 
     @abstractmethod
-    def set(self, key: str,  val: str) -> Any:
-        """ Insert one (key, val) pair to the storage."""
+    def set(self, key: str, val: str) -> Any:
+        """Insert one (key, val) pair to the storage."""
         pass
 
     @abstractmethod
     def keys(self) -> Any:
-        """ Return all keys in the storage."""
+        """Return all keys in the storage."""
         pass
-

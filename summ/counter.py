@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from typing import List, Tuple
-import logging 
+import logging
 from collections import defaultdict
+from typing import List, Tuple
 
-from summ.kv_stores.kv_store import KVStore
 from summ.entity import Entity
-
+from summ.kv_stores.kv_store import KVStore
 
 _logger = logging.getLogger(__name__)
 
@@ -16,28 +15,28 @@ class Counter:
         self._store = kv_store
 
         # Record the counts of (device_id, event_type) pairs for a single file.
-        self._count_buf = defaultdict(int)  
+        self._count_buf = defaultdict(int)
 
     def update_by_file(self, fpath: str, header: bool = True) -> None:
-        _logger.info('Processing file: {}' % fpath)
+        _logger.info(f"Processing file: {fpath}")
 
-        with open(fpath, 'r') as f:
+        with open(fpath, "r") as f:
             if header:
-                next(f)   
+                next(f)
             for line in f:
                 dev_id, ev_type = self.extract_record(line)
                 if dev_id and ev_type:
                     self._count_buf[Entity.join_keys(dev_id, ev_type)] += 1
-        
+
         # updated the buffered result to global kvstor
         self.update_to_global_store()
 
-        _logger.info('Processed file: {}' % fpath)
+        _logger.info(f"Processed file: {fpath}")
 
     def extract_record(self, record: str) -> Tuple[str, str]:
-        """ Extract the content of one line in the .csv data file. The extraced values will be
+        """Extract the content of one line in the .csv data file. The extraced values will be
         checked. If any of them are malformed, this line will be ignored.
-        
+
         Assume the content has following format with an example:
             ------
             #timestamp,device_id,event_type,event_payload
@@ -55,12 +54,12 @@ class Counter:
             record: an input string end with a newline-delimited.
 
         Returns:
-            The tuple (device_id, event_type). Both strings will be transferred to uppercase. 
+            The tuple (device_id, event_type). Both strings will be transferred to uppercase.
             An tuple ('','') will be returned if the line is malformed.
         """
-        res = ('', '')
+        res = ("", "")
 
-        r = record.strip().split(',')
+        r = record.strip().split(",")
 
         # Check the size of content
         if len(r) != 4:
@@ -79,8 +78,10 @@ class Counter:
 
         return res
 
-    def update_to_global_store(self,) -> None:
-        """ Update one file's statisitcs to the global storage. """
+    def update_to_global_store(
+        self,
+    ) -> None:
+        """Update one file's statisitcs to the global storage."""
 
         if not self._store:
             _logger.error("The instance of global storage is empty.")
@@ -94,7 +95,9 @@ class Counter:
                 self._store.set(key, str(self._count_buf[key]))
             except Exception as e:
                 # Unexcepted exception, stop and check
-                _logger.error("Unexcepted errors while reading from global store: {}" % e)
+                _logger.error(
+                    "Unexcepted errors while reading from global store: {}" % e
+                )
                 return
             else:
                 tmp = self._count_buf[key] + int(global_val)
@@ -102,5 +105,3 @@ class Counter:
 
         # clean the buff
         self._count_buf.clear()
-
-

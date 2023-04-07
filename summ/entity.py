@@ -5,9 +5,8 @@ from typing import List
 
 
 class Entity:
-
     @classmethod
-    def is_device_id(cls, device_id: str) -> bool :
+    def is_device_id(cls, device_id: str) -> bool:
         if len(device_id) != 8:
             return False
         try:
@@ -25,15 +24,13 @@ class Entity:
 
     @classmethod
     def join_keys(cls, device_id: str, event_type: str) -> str:
-        return '{}|{}' % (device_id, event_type)
+        return "{}|{}" % (device_id, event_type)
 
     @classmethod
     def disjoin_key(cls, key: str) -> List[str]:
-        res = key.strip().split('|')
+        res = key.strip().split("|")
         if len(res) != 2:
             # Malformed one
-            return ['', '']
+            return ["", ""]
         else:
             return res
-
-
