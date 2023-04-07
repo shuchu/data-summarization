@@ -26,16 +26,19 @@ class Metric:
         }
 
     def calc_stats(
-        self, eval_key: str = "*", eval_type: str = "", metrics: List[str] = ["*"]
+        self, eval_key: str = "*", eval_type: str = "device_id", metrics: List[str] = ["*"]
     ) -> Dict[str, Any]:
         """Calculate the metrics for given key and its evaluation type.
 
         Args:
+            eval_key: the evaluating key.
+            eval_type: the evaluating type, for example "device_id", "event_type".
             metrics: list of metric names, for example ['min', 'max']
 
         Returns:
             A dict object stores the calculated metrics.
         """
+        eval_key = eval_key.upper()  # All keys in the storage are uppercase.
         res = {}
 
         if eval_type not in self._supported_metrics:
@@ -71,6 +74,7 @@ class Metric:
                     filtered_metrics.add(m)
 
         if not filtered_metrics:
+            _logger.warning(f'The input metrics ({metrics}) are not supported for eval_type: {eval_type}.')
             return res
 
         # Do calculation Iteratively
@@ -138,8 +142,8 @@ class Metric:
             if metric == "hist10":
                 if "hist10" not in stat:
                     stat["hist10"] = defaultdict(int)
-                else:
-                    idx = val // 10  # histogram with bin size 10
-                    stat["hist10"][idx] += 1
+                
+                idx = val // 10  # histogram with bin size 10
+                stat["hist10"][idx*10] += 1
 
         metric_buf[key] = stat
