@@ -68,7 +68,7 @@ def summerizer(
         # Output to the target folder
         target_fname = f"dist_{eval_key}_{eval_type}.json"
         # Handle all device_id or event_type
-        if eval_key == '*':
+        if eval_key == "*":
             target_fname = f"dist_all_{eval_type}.json"
         try:
             target_path = os.path.join(out_dir, target_fname)
@@ -87,7 +87,9 @@ if __name__ == "__main__":
         "--output_dir", help="the output directory to store analysis results."
     )
     parser.add_argument("--eval_key", help="the key about to be analyzed.")
-    parser.add_argument("--eval_type", required=True, help="the type of the related key.")
+    parser.add_argument(
+        "--eval_type", required=True, help="the type of the related key."
+    )
     parser.add_argument(
         "--metrics",
         help="the list of metrics to be calculated. Represented by a joined string separated by commas.",

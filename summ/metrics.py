@@ -3,7 +3,7 @@
 
 import logging
 from collections import defaultdict
-from typing import List
+from typing import Any, Dict, List, Set
 
 from summ.entity import Entity
 from summ.kv_stores.kv_store import KVStore
@@ -27,7 +27,7 @@ class Metric:
 
     def calc_stats(
         self, eval_key: str = "*", eval_type: str = "", metrics: List[str] = ["*"]
-    ) -> dict:
+    ) -> Dict[str, Any]:
         """Calculate the metrics for given key and its evaluation type.
 
         Args:
@@ -83,17 +83,21 @@ class Metric:
                 if eval_key != "*" and eval_key != dev_id:
                     continue
                 else:
-                    self._update_stats_once(dev_id, int(self._kvstore.get(k)), filtered_metrics, res)
+                    self._update_stats_once(
+                        dev_id, int(self._kvstore.get(k)), filtered_metrics, res
+                    )
             elif eval_type == "event_type":
                 if eval_key != "*" and eval_key != ev_type:
                     continue
                 else:
-                    self._update_stats_once(ev_type, int(self._kvstore.get(k)), filtered_metrics, res)
-            
+                    self._update_stats_once(
+                        ev_type, int(self._kvstore.get(k)), filtered_metrics, res
+                    )
+
         return res
 
     def _update_stats_once(
-        self, key: str, val: int, metrics: List[str], metric_buf: dict
+        self, key: str, val: int, metrics: Set[str], metric_buf: dict
     ) -> None:
         """Update the statistics of a key with value val.
 

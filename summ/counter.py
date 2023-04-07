@@ -2,7 +2,7 @@
 
 import logging
 from collections import defaultdict
-from typing import List, Tuple
+from typing import DefaultDict, List, Tuple
 
 from summ.entity import Entity
 from summ.kv_stores.kv_store import KVStore
@@ -15,7 +15,7 @@ class Counter:
         self._store = kv_store
 
         # Record the counts of (device_id, event_type) pairs for a single file.
-        self._count_buf = defaultdict(int)
+        self._count_buf: DefaultDict[str, int] = defaultdict(int)
 
     def update_by_file(self, fpath: str, header: bool = True) -> None:
         _logger.info(f"Processing file: {fpath}")
