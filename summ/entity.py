@@ -28,7 +28,7 @@ class Entity:
 
     @classmethod
     def disjoin_key(cls, key: str) -> List[str]:
-        res = key.strip().split("|")
+        res = key.strip().split("|", maxsplit=1)
         if len(res) != 2:
             # Malformed one
             return ["", ""]
