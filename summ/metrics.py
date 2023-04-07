@@ -144,6 +144,6 @@ class Metric:
                     stat["hist10"] = defaultdict(int)
                 
                 idx = val // 10  # histogram with bin size 10
-                stat["hist10"][idx] += 1
+                stat["hist10"][idx*10] += 1
 
         metric_buf[key] = stat

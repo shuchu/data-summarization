@@ -29,7 +29,7 @@ def summerizer(
     metrics: str = "*",
 ) -> None:
     """Summarize the data in data_folder.
-        Supported output file format: .csv, .json.
+    Supported output file format: .csv, .json.
 
     Args:
         data_folder: the folder includes all data file.
@@ -77,6 +77,7 @@ def summerizer(
             _logger.error(
                 "Failed to write the result to diretory: {target_path}, error: {e}."
             )
+        _logger.info(f"Final output is saved to: {target_path}")
 
 
 if __name__ == "__main__":

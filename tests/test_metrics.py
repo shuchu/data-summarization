@@ -49,7 +49,7 @@ def test_update_states_once():
     assert metric_buf[key]['max'] == 27
     assert math.fabs(metric_buf[key]['mean'] - 10.0) < 1e-5
     assert metric_buf[key]['hist10'][0] == 2
-    assert metric_buf[key]['hist10'][2] == 1
+    assert metric_buf[key]['hist10'][20] == 1
 
 
 def test_calc_stats():
