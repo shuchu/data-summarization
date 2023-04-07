@@ -11,3 +11,9 @@ lint:
 
 test:
 	python -m pytest ./tests
+
+build:
+	bazel build summerizer
+
+clean:
+	bazel clean --expunge
