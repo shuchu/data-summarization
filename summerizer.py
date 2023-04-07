@@ -29,7 +29,6 @@ def summerizer(
     metrics: str = "*",
 ) -> None:
     """Summarize the data in data_folder.
-    Supported output file format: .csv, .json.
 
     Args:
         data_folder: the folder includes all data file.

@@ -2,9 +2,11 @@
 Generate summary information for the distribution of giving data. This script is wrote in Python 3, and build with bazel (https://bazel.build).
 It is implemented with default Python libraries, not third-party libraries are required.    
 
+This script is tested with Python3 (3.9) and Bazel(5.3.2)
+
 ## Getting started  
 ### Build the script:   
-1. install bazel   
+1. install bazel 
 2. run "make build"  
 3. the built script is at 'bazel-bin/summerizer'   
 
